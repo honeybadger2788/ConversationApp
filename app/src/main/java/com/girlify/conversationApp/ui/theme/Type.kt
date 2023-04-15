@@ -1,4 +1,4 @@
-package com.girlify.myapplication.ui.theme
+package com.girlify.conversationApp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
