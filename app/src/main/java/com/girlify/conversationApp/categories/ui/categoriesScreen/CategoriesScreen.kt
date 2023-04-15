@@ -44,7 +44,12 @@ fun CategoriesScreen(){
 
 @Composable
 fun ItemCategory(category: CategoryModel, onItemSelected: (CategoryModel) -> Unit) {
-    Card(modifier = Modifier.padding(8.dp).clickable { onItemSelected(category) }, elevation = CardDefaults.cardElevation(8.dp)) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { onItemSelected(category) },
+        elevation = CardDefaults.cardElevation(8.dp)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Icon(
                 imageVector = category.icon,
