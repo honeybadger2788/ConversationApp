@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScreen
+import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    CategoriesScreen()
+                    //CategoriesScreen()
+                    QuestionScreen()
                 }
             }
         }
