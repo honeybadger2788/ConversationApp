@@ -1,4 +1,4 @@
-package com.girlify.myapplication.ui.theme
+package com.girlify.conversationApp.ui.theme
 
 import android.app.Activity
 import android.os.Build

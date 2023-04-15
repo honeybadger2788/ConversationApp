@@ -1,4 +1,4 @@
-package com.girlify.myapplication
+package com.girlify.conversationApp
 
 import org.junit.Test
 

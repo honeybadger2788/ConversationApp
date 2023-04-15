@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.girlify.myapplication'
+    namespace 'com.girlify.conversationApp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.girlify.myapplication"
+        applicationId "com.girlify.conversationApp"
         minSdk 24
         targetSdk 33
         versionCode 1

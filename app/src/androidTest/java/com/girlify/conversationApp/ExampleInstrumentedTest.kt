@@ -1,4 +1,4 @@
-package com.girlify.myapplication
+package com.girlify.conversationApp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
