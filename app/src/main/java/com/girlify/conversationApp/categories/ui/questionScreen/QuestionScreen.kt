@@ -30,19 +30,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
+import com.girlify.conversationApp.model.Routes
+
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-fun QuestionScreen() {
+fun QuestionScreen(navigationController: NavHostController, s: String) {
     Column(Modifier.fillMaxSize()
     ) {
-        TopAppBar(title = { Text(text = "CATEGORY") }, navigationIcon = {
+        TopAppBar(title = { Text(text = s) }, navigationIcon = {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "back",
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(4.dp).clickable {
+                    navigationController.navigate(Routes.Categories.route)
+                }
             )
         })
         LazyRow(
