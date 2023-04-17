@@ -17,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -34,8 +35,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 import com.girlify.conversationApp.model.Routes
+import com.girlify.conversationApp.ui.CardText
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,45 +80,32 @@ fun QuestionScreen(navigationController: NavHostController, s: String) {
 }
 
 fun getQuestions(): List<QuestionModel> {
-return listOf(
-    QuestionModel(
-        "¿Qué es lo que más te gusta de viajar en transporte público?",
-        "En el colectivo"
-    ),
-    QuestionModel(
-        "¿Qué libro o podcast estás leyendo o escuchando actualmente y por qué lo recomendarías?",
-        "En el colectivo"
-    ),
-    QuestionModel(
-        "¿Cuál es el lugar más hermoso que has visitado en tu vida y por qué?",
-        "En el colectivo"
-    ),
-    QuestionModel(
-        "¿Qué opinas sobre la idea de \"el amor a primera vista\"?",
-        "En el colectivo"
-    ),
-    QuestionModel(
-        "¿Cuál ha sido tu mayor reto en la vida y cómo lo superaste?",
-        "En el colectivo"
-    ),
-    QuestionModel(
-        "¿Qué te gustaría hacer si no tuvieras que trabajar para vivir?",
-        "En el colectivo"
+    return listOf(
+        QuestionModel(
+            "¿Qué es lo que más te gusta de viajar en transporte público?",
+            "En el colectivo"
+        ),
+        QuestionModel(
+            "¿Qué libro o podcast estás leyendo o escuchando actualmente y por qué lo recomendarías?",
+            "En el colectivo"
+        ),
+        QuestionModel(
+            "¿Cuál es el lugar más hermoso que has visitado en tu vida y por qué?",
+            "En el colectivo"
+        ),
+        QuestionModel(
+            "¿Qué opinas sobre la idea de \"el amor a primera vista\"?",
+            "En el colectivo"
+        ),
+        QuestionModel(
+            "¿Cuál ha sido tu mayor reto en la vida y cómo lo superaste?",
+            "En el colectivo"
+        ),
+        QuestionModel(
+            "¿Qué te gustaría hacer si no tuvieras que trabajar para vivir?",
+            "En el colectivo"
+        )
     )
-)
-}
-
-enum class CardFace(val angle: Float) {
-    Reverse(0f) {
-        override val next: CardFace
-            get() = Front
-    },
-    Front(180f) {
-        override val next: CardFace
-            get() = Reverse
-    };
-
-    abstract val next: CardFace
 }
 
 @Composable
@@ -135,23 +125,23 @@ fun ItemQuestion(question: QuestionModel,modifier: Modifier) {
     Card(
         modifier = modifier
             .graphicsLayer {
-                rotationY = rotation.value
+                rotationX = rotation.value
                 cameraDistance = 12f * density
             }
             .clickable { cardFace = cardFace.next },
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(Color(0xFFC1007C))
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
     ) {
         if (rotation.value <= 90f) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ReverseCard()
+                ReverseCard("?")
             }
         } else {
             Box(
                 Modifier
                     .fillMaxSize()
                     .graphicsLayer {
-                        rotationY = 180f
+                        rotationX = 180f
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -164,24 +154,10 @@ fun ItemQuestion(question: QuestionModel,modifier: Modifier) {
 
 @Composable
 fun FrontCard(question: String) {
-    Text(
-        text = question,
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        fontSize = 42.sp,
-        lineHeight = 48.sp,
-        modifier = Modifier.padding(horizontal = 16.dp)
-    )
+    CardText(text = question)
 }
 
 @Composable
-fun ReverseCard() {
-    Text(
-        text = "?",
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        fontSize = 42.sp,
-        lineHeight = 48.sp,
-        modifier = Modifier.padding(horizontal = 16.dp)
-    )
+fun ReverseCard(text: String) {
+    CardText(text = text)
 }

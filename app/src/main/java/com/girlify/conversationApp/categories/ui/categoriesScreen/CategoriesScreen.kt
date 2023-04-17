@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ fun CategoriesScreen(navigationController: NavHostController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
-            .padding(16.dp)
+            .padding(8.dp)
             .fillMaxSize()
     ) {
         items(getCategories()) { category ->
@@ -75,18 +76,22 @@ fun getCategories(): List<CategoryModel> {
 }
 
 @Composable
-fun ItemCategory(category: CategoryModel, modifier: Modifier, onItemSelected: (CategoryModel) -> Unit) {
+fun ItemCategory(
+    category: CategoryModel,
+    modifier: Modifier,
+    onItemSelected: (CategoryModel) -> Unit
+) {
     Card(
         modifier = modifier
             .padding(8.dp)
             .clickable { onItemSelected(category) },
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(Color(0xFFC1007C))
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Icon(
                 imageVector = category.icon,
-                contentDescription = "",
+                contentDescription = "category icon",
                 modifier = Modifier.size(64.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
