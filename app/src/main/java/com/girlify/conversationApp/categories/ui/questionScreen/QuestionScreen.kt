@@ -1,13 +1,14 @@
 package com.girlify.conversationApp.categories.ui.questionScreen
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -44,11 +47,18 @@ fun QuestionScreen(navigationController: NavHostController, s: String) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "back",
-                modifier = Modifier.padding(4.dp).clickable {
-                    navigationController.navigate(Routes.Categories.route)
-                }
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(32.dp)
+                    .clickable {
+                        navigationController.navigate(Routes.Categories.route)
+                    }
             )
-        })
+        }, colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color.Transparent,
+            navigationIconContentColor = Color.White,
+            titleContentColor = Color.White
+        ))
         LazyRow(
             modifier = Modifier
                 .padding(16.dp)
@@ -59,6 +69,7 @@ fun QuestionScreen(navigationController: NavHostController, s: String) {
                     question,
                     Modifier
                         .fillParentMaxSize()
+                        .padding(horizontal = 8.dp)
                 )
             }
         }
@@ -94,24 +105,83 @@ return listOf(
 )
 }
 
+enum class CardFace(val angle: Float) {
+    Reverse(0f) {
+        override val next: CardFace
+            get() = Front
+    },
+    Front(180f) {
+        override val next: CardFace
+            get() = Reverse
+    };
+
+    abstract val next: CardFace
+}
+
 @Composable
 fun ItemQuestion(question: QuestionModel,modifier: Modifier) {
-    var isVisible by remember {
-        mutableStateOf(false)
+    var cardFace by remember {
+        mutableStateOf(CardFace.Reverse)
     }
 
-    Card(modifier = modifier.clickable { isVisible = !isVisible }, elevation = CardDefaults.cardElevation(8.dp)) {
-        AnimatedVisibility(visible = isVisible, enter = fadeIn(), exit = fadeOut()) {
+    val rotation = animateFloatAsState(
+        targetValue = cardFace.angle,
+        animationSpec = tween(
+            durationMillis = 400,
+            easing = FastOutSlowInEasing,
+        )
+    )
+
+    Card(
+        modifier = modifier
+            .graphicsLayer {
+                rotationY = rotation.value
+                cameraDistance = 12f * density
+            }
+            .clickable { cardFace = cardFace.next },
+        elevation = CardDefaults.cardElevation(8.dp),
+        colors = CardDefaults.cardColors(Color(0xFFC1007C))
+    ) {
+        if (rotation.value <= 90f) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = question.question,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 42.sp,
-                    lineHeight = 48.sp,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
+                ReverseCard()
+            }
+        } else {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        rotationY = 180f
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                FrontCard(question.question)
             }
         }
+
     }
+}
+
+@Composable
+fun FrontCard(question: String) {
+    Text(
+        text = question,
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
+
+@Composable
+fun ReverseCard() {
+    Text(
+        text = "?",
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
 }
