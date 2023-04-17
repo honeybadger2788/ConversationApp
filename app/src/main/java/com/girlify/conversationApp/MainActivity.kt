@@ -3,6 +3,7 @@ package com.girlify.conversationApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,11 +14,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScreen
+import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesViewModel
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
+import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val categoriesViewModel: CategoriesViewModel by viewModels()
+    private val questionViewModel: QuestionViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = Routes.Categories.route
                     ) {
                         composable(Routes.Categories.route) {
-                            CategoriesScreen(navigationController)
+                            CategoriesScreen(navigationController, categoriesViewModel)
                         }
                         composable(
                             Routes.Questions.route,
@@ -43,7 +50,8 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             QuestionScreen(
                                 navigationController,
-                                backStackEntry.arguments?.getString("categoryName") ?: ""
+                                backStackEntry.arguments?.getString("categoryName") ?: "",
+                                questionViewModel
                             )
                         }
                     }
