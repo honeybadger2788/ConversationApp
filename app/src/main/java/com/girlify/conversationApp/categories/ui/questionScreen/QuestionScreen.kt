@@ -30,10 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
@@ -43,7 +40,11 @@ import com.girlify.conversationApp.ui.CardText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionScreen(navigationController: NavHostController, s: String) {
+fun QuestionScreen(
+    navigationController: NavHostController,
+    s: String,
+    questionViewModel: QuestionViewModel
+) {
     Column(Modifier.fillMaxSize()
     ) {
         TopAppBar(title = { Text(text = s) }, navigationIcon = {
