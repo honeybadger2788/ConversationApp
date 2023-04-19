@@ -1,6 +1,5 @@
 package com.girlify.conversationApp.categories.data.network
 
-import android.util.Log
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 import com.google.firebase.firestore.DocumentSnapshot
