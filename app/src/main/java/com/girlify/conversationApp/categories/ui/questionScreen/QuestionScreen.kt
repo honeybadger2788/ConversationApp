@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 import com.girlify.conversationApp.model.Routes
@@ -83,28 +84,22 @@ fun QuestionScreen(
 fun getQuestions(): List<QuestionModel> {
     return listOf(
         QuestionModel(
-            "¿Qué es lo que más te gusta de viajar en transporte público?",
-            "En el colectivo"
+            "¿Qué es lo que más te gusta de viajar en transporte público?"
         ),
         QuestionModel(
-            "¿Qué libro o podcast estás leyendo o escuchando actualmente y por qué lo recomendarías?",
-            "En el colectivo"
+            "¿Qué libro o podcast estás leyendo o escuchando actualmente y por qué lo recomendarías?"
         ),
         QuestionModel(
-            "¿Cuál es el lugar más hermoso que has visitado en tu vida y por qué?",
-            "En el colectivo"
+            "¿Cuál es el lugar más hermoso que has visitado en tu vida y por qué?"
         ),
         QuestionModel(
-            "¿Qué opinas sobre la idea de \"el amor a primera vista\"?",
-            "En el colectivo"
+            "¿Qué opinas sobre la idea de \"el amor a primera vista\"?"
         ),
         QuestionModel(
-            "¿Cuál ha sido tu mayor reto en la vida y cómo lo superaste?",
-            "En el colectivo"
+            "¿Cuál ha sido tu mayor reto en la vida y cómo lo superaste?"
         ),
         QuestionModel(
-            "¿Qué te gustaría hacer si no tuvieras que trabajar para vivir?",
-            "En el colectivo"
+            "¿Qué te gustaría hacer si no tuvieras que trabajar para vivir?"
         )
     )
 }

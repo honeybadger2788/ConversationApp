@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScreen
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesViewModel
+import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
 import com.girlify.conversationApp.model.Routes
@@ -44,13 +45,13 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(
                             Routes.Questions.route,
-                            arguments = listOf(navArgument("categoryName") {
+                            arguments = listOf(navArgument("categoryId") {
                                 type = NavType.StringType
                             })
                         ) { backStackEntry ->
                             QuestionScreen(
                                 navigationController,
-                                backStackEntry.arguments?.getString("categoryName") ?: "",
+                                backStackEntry.arguments?.getString("categoryId")?:"",
                                 questionViewModel
                             )
                         }

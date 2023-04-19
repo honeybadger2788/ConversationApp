@@ -1,5 +1,5 @@
 package com.girlify.conversationApp.categories.ui.categoriesScreen.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 
-data class CategoryModel(val name: String, val icon: ImageVector)
+data class CategoryModel(val id: String, val name: String, val questions: List<QuestionModel>)
