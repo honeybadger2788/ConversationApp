@@ -1,5 +1,8 @@
 package com.girlify.conversationApp.categories.ui.questionScreen
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -28,11 +31,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -41,6 +46,8 @@ import androidx.navigation.NavHostController
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.CardText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun QuestionScreen(
@@ -49,6 +56,11 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var doubleBackToExitPressedOnce by remember { mutableStateOf(false)}
+    val backPressDispatcher =
+        LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val uiState by produceState<QuestionsUiState>(
         initialValue = QuestionsUiState.Loading,
@@ -74,6 +86,22 @@ fun QuestionScreen(
                     navigationController.navigate(Routes.Categories.route)
                 }
                 QuestionsList((uiState as QuestionsUiState.Success).category.questions)
+                BackHandler {
+                    if (doubleBackToExitPressedOnce) {
+                        backPressDispatcher.onBackPressed()
+                    } else {
+                        doubleBackToExitPressedOnce = true
+                        Toast.makeText(
+                            context,
+                            "Presiona de nuevo para salir",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        scope.launch {
+                            delay(1000)
+                            doubleBackToExitPressedOnce = false
+                        }
+                    }
+                }
             }
         }
     }
