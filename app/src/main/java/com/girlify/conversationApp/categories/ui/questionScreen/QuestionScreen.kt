@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,33 +23,74 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
-import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
-import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.CardText
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
     s: String,
     questionViewModel: QuestionViewModel
 ) {
-    Column(Modifier.fillMaxSize()
-    ) {
-        TopAppBar(title = { Text(text = s) }, navigationIcon = {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    val uiState by produceState<QuestionsUiState>(
+        initialValue = QuestionsUiState.Loading,
+        key1 = lifecycle,
+        key2 = questionViewModel
+    ){
+        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED){
+            questionViewModel.uiState.collect{ value = it }
+        }
+    }
+
+    when(uiState){
+        is QuestionsUiState.Error -> {}
+        QuestionsUiState.Loading -> {
+            Box(Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
+        }
+        is QuestionsUiState.Success -> {
+            Column(Modifier.fillMaxSize()
+            ) {
+                TopBar((uiState as QuestionsUiState.Success).category.name){
+                    navigationController.navigate(Routes.Categories.route)
+                }
+                QuestionsList((uiState as QuestionsUiState.Success).category.questions)
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        questionViewModel.getQuestions(s)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun TopBar(categoryName: String, goBack:() -> Unit) {
+    TopAppBar(
+        title = { Text(text =  categoryName)},
+        navigationIcon = {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "back",
@@ -56,56 +98,37 @@ fun QuestionScreen(
                     .padding(4.dp)
                     .size(32.dp)
                     .clickable {
-                        navigationController.navigate(Routes.Categories.route)
+                        goBack()
                     }
             )
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = Color.Transparent,
             navigationIconContentColor = Color.White,
             titleContentColor = Color.White
-        ))
-        LazyRow(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize()
-        ) {
-            items(getQuestions()) { question ->
-                ItemQuestion(
-                    question,
-                    Modifier
-                        .fillParentMaxSize()
-                        .padding(horizontal = 8.dp)
-                )
-            }
-        }
-    }
-}
-
-fun getQuestions(): List<QuestionModel> {
-    return listOf(
-        QuestionModel(
-            "¿Qué es lo que más te gusta de viajar en transporte público?"
-        ),
-        QuestionModel(
-            "¿Qué libro o podcast estás leyendo o escuchando actualmente y por qué lo recomendarías?"
-        ),
-        QuestionModel(
-            "¿Cuál es el lugar más hermoso que has visitado en tu vida y por qué?"
-        ),
-        QuestionModel(
-            "¿Qué opinas sobre la idea de \"el amor a primera vista\"?"
-        ),
-        QuestionModel(
-            "¿Cuál ha sido tu mayor reto en la vida y cómo lo superaste?"
-        ),
-        QuestionModel(
-            "¿Qué te gustaría hacer si no tuvieras que trabajar para vivir?"
         )
     )
 }
 
 @Composable
-fun ItemQuestion(question: QuestionModel,modifier: Modifier) {
+fun QuestionsList(questions: List<String>) {
+    LazyRow(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+    ) {
+        items(questions) { question ->
+            ItemQuestion(
+                question,
+                Modifier
+                    .fillParentMaxSize()
+                    .padding(horizontal = 8.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ItemQuestion(question: String,modifier: Modifier) {
     var cardFace by remember {
         mutableStateOf(CardFace.Reverse)
     }
@@ -141,7 +164,7 @@ fun ItemQuestion(question: QuestionModel,modifier: Modifier) {
                     },
                 contentAlignment = Alignment.Center
             ) {
-                FrontCard(question.question)
+                FrontCard(question)
             }
         }
 

@@ -14,13 +14,11 @@ class CategoryRepository @Inject constructor(
 ) {
     suspend fun getAllCategoriesFromFirebase(): Flow<List<CategoryModel>> = firebase.getCategories()
 
-    suspend fun getAllCategoriesFromDatabase(): Flow<List<CategoryModel>> {
-        val categories = mutableListOf<CategoryModel>()
+    suspend fun getAllCategoriesFromDatabase(): List<CategoryModel> {
         val response: List<CategoryEntity> = categoryDao.getCategories()
-        response.map {
-            categories.add(it.toDomain())
+        return response.map {
+            it.toDomain()
         }
-        return flowOf(categories)
     }
 
     suspend fun getQuestionsFromDatabase(categoryId: String): Flow<CategoryModel?> {

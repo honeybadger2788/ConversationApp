@@ -13,7 +13,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuestionViewModel @Inject constructor(
+    private val getQuestionsUseCase: GetQuestionsUseCase
 ): ViewModel() {
+    private val _uiState = MutableStateFlow<QuestionsUiState>(QuestionsUiState.Loading)
+    val uiState: StateFlow<QuestionsUiState> = _uiState
 
-
+    fun getQuestions(categoryId: String){
+        viewModelScope.launch {
+            getQuestionsUseCase(categoryId).collect{
+                _uiState.value = it?.let { category -> QuestionsUiState.Success(category) }!!
+            }
+        }
+    }
 }

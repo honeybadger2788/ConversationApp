@@ -26,6 +26,6 @@ class CategoriesService @Inject constructor(
 
 private fun DocumentSnapshot.toCategory(): CategoryModel {
     return CategoryModel(this.id, this.data?.get("name") as String,
-        this.data!!["questions"] as List<QuestionModel>
+        this.data!!["questions"] as List<String>
     )
 }

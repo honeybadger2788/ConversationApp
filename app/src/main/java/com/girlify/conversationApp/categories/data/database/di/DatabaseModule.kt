@@ -23,6 +23,10 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideConversationDatabase(@ApplicationContext appContext: Context): CategoriesDatabase {
-        return Room.databaseBuilder(appContext, CategoriesDatabase::class.java, "CategoriesDatabase").build()
+        return Room.databaseBuilder(
+            appContext,
+            CategoriesDatabase::class.java,
+            "CategoriesDatabase"
+        ).build()
     }
 }
