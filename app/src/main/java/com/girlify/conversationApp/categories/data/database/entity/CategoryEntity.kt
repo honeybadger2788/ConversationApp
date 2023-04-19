@@ -9,9 +9,10 @@ data class CategoryEntity(
     @PrimaryKey
     val id: String,
     val name: String,
+    val image: String,
     val questions: List<String>
 ) {
     fun toDomain(): CategoryModel {
-        return CategoryModel(this.id, this.name, this.questions)
+        return CategoryModel(this.id, this.name, this.image, this.questions)
     }
 }

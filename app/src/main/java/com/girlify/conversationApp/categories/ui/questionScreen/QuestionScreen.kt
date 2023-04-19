@@ -42,8 +42,6 @@ import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.CardText
 
-
-
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
@@ -66,7 +64,7 @@ fun QuestionScreen(
         is QuestionsUiState.Error -> {}
         QuestionsUiState.Loading -> {
             Box(Modifier.fillMaxSize()) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
         is QuestionsUiState.Success -> {
