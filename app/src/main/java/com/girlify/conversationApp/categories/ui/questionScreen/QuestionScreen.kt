@@ -1,5 +1,8 @@
 package com.girlify.conversationApp.categories.ui.questionScreen
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -28,11 +31,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -41,6 +46,8 @@ import androidx.navigation.NavHostController
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.CardText
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun QuestionScreen(
@@ -71,7 +78,7 @@ fun QuestionScreen(
             Column(Modifier.fillMaxSize()
             ) {
                 TopBar((uiState as QuestionsUiState.Success).category.name){
-                    navigationController.navigate(Routes.Categories.route)
+                    navigationController.popBackStack()
                 }
                 QuestionsList((uiState as QuestionsUiState.Success).category.questions)
             }

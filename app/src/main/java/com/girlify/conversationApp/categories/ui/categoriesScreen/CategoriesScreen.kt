@@ -1,5 +1,8 @@
 package com.girlify.conversationApp.categories.ui.categoriesScreen
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,9 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +41,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.model.Routes
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoriesScreen(
@@ -40,6 +50,11 @@ fun CategoriesScreen(
     categoriesViewModel: CategoriesViewModel
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    var doubleBackToExitPressedOnce by remember { mutableStateOf(false) }
+    val backPressDispatcher =
+        LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     val uiState by produceState<CategoriesUiState>(
         initialValue = CategoriesUiState.Loading,
@@ -63,6 +78,25 @@ fun CategoriesScreen(
                 (uiState as CategoriesUiState.Success).categories,
                 navigationController
             )
+            BackHandler {
+                if (doubleBackToExitPressedOnce) {
+                    navigationController.popBackStack()
+                    backPressDispatcher.onBackPressed()
+                } else {
+                    doubleBackToExitPressedOnce = true
+                    Toast.makeText(
+                        context,
+                        "Presiona de nuevo para salir",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    scope.launch {
+                        delay(1000)
+                        if (doubleBackToExitPressedOnce) {
+                            doubleBackToExitPressedOnce = false
+                        }
+                    }
+                }
+            }
         }
     }
 
