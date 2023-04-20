@@ -1,11 +1,9 @@
 package com.girlify.conversationApp.categories.ui.questionScreen
 
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,23 +29,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
+import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
-import com.girlify.conversationApp.model.Routes
-import com.girlify.conversationApp.ui.CardText
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun QuestionScreen(
@@ -108,8 +105,8 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
             )
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = Color.Transparent,
-            navigationIconContentColor = Color.White,
-            titleContentColor = Color.White
+            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground
         )
     )
 }
@@ -154,7 +151,7 @@ fun ItemQuestion(question: String,modifier: Modifier) {
             }
             .clickable { cardFace = cardFace.next },
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         if (rotation.value <= 90f) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -178,10 +175,17 @@ fun ItemQuestion(question: String,modifier: Modifier) {
 
 @Composable
 fun FrontCard(question: String) {
-    CardText(text = question)
+    Text(
+        text = question,
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
 }
 
 @Composable
 fun ReverseCard(text: String) {
-    CardText(text = text)
+    Image(painterResource(id = R.drawable.question_mark), contentDescription = text)
 }
