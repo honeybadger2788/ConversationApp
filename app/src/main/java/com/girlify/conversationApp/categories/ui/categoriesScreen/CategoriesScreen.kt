@@ -80,6 +80,7 @@ fun CategoriesScreen(
             )
             BackHandler {
                 if (doubleBackToExitPressedOnce) {
+                    navigationController.popBackStack()
                     backPressDispatcher.onBackPressed()
                 } else {
                     doubleBackToExitPressedOnce = true
@@ -90,7 +91,9 @@ fun CategoriesScreen(
                     ).show()
                     scope.launch {
                         delay(1000)
-                        doubleBackToExitPressedOnce = false
+                        if (doubleBackToExitPressedOnce) {
+                            doubleBackToExitPressedOnce = false
+                        }
                     }
                 }
             }

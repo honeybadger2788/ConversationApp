@@ -56,11 +56,6 @@ fun QuestionScreen(
     questionViewModel: QuestionViewModel
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    var doubleBackToExitPressedOnce by remember { mutableStateOf(false)}
-    val backPressDispatcher =
-        LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     val uiState by produceState<QuestionsUiState>(
         initialValue = QuestionsUiState.Loading,
@@ -83,25 +78,9 @@ fun QuestionScreen(
             Column(Modifier.fillMaxSize()
             ) {
                 TopBar((uiState as QuestionsUiState.Success).category.name){
-                    navigationController.navigate(Routes.Categories.route)
+                    navigationController.popBackStack()
                 }
                 QuestionsList((uiState as QuestionsUiState.Success).category.questions)
-                BackHandler {
-                    if (doubleBackToExitPressedOnce) {
-                        backPressDispatcher.onBackPressed()
-                    } else {
-                        doubleBackToExitPressedOnce = true
-                        Toast.makeText(
-                            context,
-                            "Presiona de nuevo para salir",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        scope.launch {
-                            delay(1000)
-                            doubleBackToExitPressedOnce = false
-                        }
-                    }
-                }
             }
         }
     }
