@@ -3,7 +3,9 @@ package com.girlify.conversationApp.categories.ui.questionScreen
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -104,9 +106,9 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
                     }
             )
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = Color.Transparent,
-            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-            titleContentColor = MaterialTheme.colorScheme.onBackground
+            containerColor = MaterialTheme.colorScheme.surface,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface
         )
     )
 }
@@ -150,6 +152,7 @@ fun ItemQuestion(question: String,modifier: Modifier) {
                 cameraDistance = 12f * density
             }
             .clickable { cardFace = cardFace.next },
+        border = BorderStroke(8.dp,MaterialTheme.colorScheme.primary),
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
