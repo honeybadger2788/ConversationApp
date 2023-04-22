@@ -6,13 +6,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -45,6 +48,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
+import com.girlify.conversationApp.ui.CardText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun QuestionScreen(
@@ -113,20 +119,51 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
 
 @Composable
 fun QuestionsList(questions: List<String>) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     LazyRow(
+        state = listState,
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(questions) { question ->
             ItemQuestion(
                 question,
                 Modifier
                     .fillParentMaxSize()
-                    .padding(horizontal = 8.dp)
             )
+            if(!listState.isScrollInProgress){
+                if(listState.isHalfPastItemLeft())
+                    coroutineScope.scrollBasic(listState, left = true)
+                else
+                    coroutineScope.scrollBasic(listState)
+
+                if(listState.isHalfPastItemRight())
+                    coroutineScope.scrollBasic(listState)
+                else
+                    coroutineScope.scrollBasic(listState, left = true)
+            }
         }
     }
+}
+
+private fun CoroutineScope.scrollBasic(listState: LazyListState, left: Boolean = false){
+    launch {
+        val pos = if(left) listState.firstVisibleItemIndex else listState.firstVisibleItemIndex+1
+        listState.animateScrollToItem(pos)
+    }
+}
+
+@Composable
+private fun LazyListState.isHalfPastItemRight(): Boolean {
+    return firstVisibleItemScrollOffset > 500
+}
+
+@Composable
+private fun LazyListState.isHalfPastItemLeft(): Boolean {
+    return firstVisibleItemScrollOffset <= 500
 }
 
 @Composable
