@@ -145,7 +145,7 @@ fun ItemCategory(
             .padding(8.dp)
             .clickable { onItemSelected(category) },
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             GlideImage(model = category.image, contentDescription = "", Modifier.size(64.dp))
