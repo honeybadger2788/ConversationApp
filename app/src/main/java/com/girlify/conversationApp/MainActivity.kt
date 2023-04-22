@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,6 +19,7 @@ import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesView
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
 import com.girlify.conversationApp.model.Routes
+import com.girlify.conversationApp.ui.SplashScreen
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,29 +36,40 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
                 ) {
-                    val navigationController = rememberNavController()
-                    NavHost(
-                        navController = navigationController,
-                        startDestination = Routes.Categories.route
-                    ) {
-                        composable(Routes.Categories.route) {
-                            CategoriesScreen(navigationController, categoriesViewModel)
-                        }
-                        composable(
-                            Routes.Questions.route,
-                            arguments = listOf(navArgument("categoryId") {
-                                type = NavType.StringType
-                            })
-                        ) { backStackEntry ->
-                            QuestionScreen(
-                                navigationController,
-                                backStackEntry.arguments?.getString("categoryId")?:"",
-                                questionViewModel
-                            )
-                        }
-                    }
+                    MyNavigation(categoriesViewModel, questionViewModel)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun MyNavigation(
+    categoriesViewModel: CategoriesViewModel,
+    questionViewModel: QuestionViewModel
+) {
+    val navigationController = rememberNavController()
+    NavHost(
+        navController = navigationController,
+        startDestination = Routes.SplashScreen.route
+    ) {
+        composable(Routes.SplashScreen.route) {
+            SplashScreen(navigationController)
+        }
+        composable(Routes.Categories.route) {
+            CategoriesScreen(navigationController, categoriesViewModel)
+        }
+        composable(
+            Routes.Questions.route,
+            arguments = listOf(navArgument("categoryId") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            QuestionScreen(
+                navigationController,
+                backStackEntry.arguments?.getString("categoryId")?:"",
+                questionViewModel
+            )
         }
     }
 }
