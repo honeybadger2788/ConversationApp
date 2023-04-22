@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +49,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
-import com.girlify.conversationApp.ui.CardText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
