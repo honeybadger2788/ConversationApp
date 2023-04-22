@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -106,9 +107,9 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
                     }
             )
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-            titleContentColor = MaterialTheme.colorScheme.onSurface
+            containerColor = MaterialTheme.colorScheme.background,
+            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+            titleContentColor = MaterialTheme.colorScheme.onBackground
         )
     )
 }
@@ -152,7 +153,7 @@ fun ItemQuestion(question: String,modifier: Modifier) {
                 cameraDistance = 12f * density
             }
             .clickable { cardFace = cardFace.next },
-        border = BorderStroke(8.dp,MaterialTheme.colorScheme.primary),
+        border = BorderStroke(8.dp,MaterialTheme.colorScheme.tertiary),
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
