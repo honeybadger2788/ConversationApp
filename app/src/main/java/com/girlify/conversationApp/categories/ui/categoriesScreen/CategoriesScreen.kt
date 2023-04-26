@@ -75,9 +75,13 @@ fun CategoriesScreen(
         }
         is CategoriesUiState.Success -> {
             CategoriesList(
-                (uiState as CategoriesUiState.Success).categories,
-                navigationController
-            )
+                (uiState as CategoriesUiState.Success).categories){
+                navigationController.navigate(
+                    Routes.Questions.createRoute(
+                        categoryId = it.id
+                    )
+                )
+            }
             BackHandler {
                 if (doubleBackToExitPressedOnce) {
                     navigationController.popBackStack()
@@ -108,7 +112,7 @@ fun CategoriesScreen(
 @Composable
 fun CategoriesList(
     categories: List<CategoryModel>,
-    navigationController: NavHostController
+    goToQuestions: (CategoryModel) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -123,11 +127,7 @@ fun CategoriesList(
                     .fillMaxSize()
                     .height(170.dp)
             ) {
-                navigationController.navigate(
-                    Routes.Questions.createRoute(
-                        categoryId = category.id
-                    )
-                )
+                goToQuestions(category)
             }
         }
     }
