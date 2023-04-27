@@ -1,14 +1,13 @@
 package com.girlify.conversationApp.categories.ui.questionScreen.model
 
-enum class CardFace(val angle: Float) {
-    Reverse(0f) {
-        override val next: CardFace
-            get() = Front
-    },
-    Front(180f) {
-        override val next: CardFace
-            get() = Reverse
-    };
+fun CardFace.toggle(): CardFace {
+    return if (this == CardFace.Reverse) {
+        CardFace.Face
+    } else {
+        CardFace.Reverse
+    }
+}
 
-    abstract val next: CardFace
+enum class CardFace {
+    Reverse, Face
 }

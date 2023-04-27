@@ -20,8 +20,9 @@ class QuestionViewModel @Inject constructor(
 
     fun getQuestions(categoryId: String){
         viewModelScope.launch {
-            getQuestionsUseCase(categoryId).collect{
-                _uiState.value = it?.let { category -> QuestionsUiState.Success(category) }!!
+            getQuestionsUseCase(categoryId).collect{ category ->
+                _uiState.value =
+                    category?.let { QuestionsUiState.Success(it) } ?: QuestionsUiState.Error
             }
         }
     }
