@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +53,7 @@ import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+const val QUESTIONS_LIST_TEST_TAG = "questions list test tag"
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
@@ -125,7 +127,8 @@ fun QuestionsList(questions: List<String>) {
         state = listState,
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag(QUESTIONS_LIST_TEST_TAG),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(questions) { question ->
