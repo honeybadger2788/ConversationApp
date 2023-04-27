@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,7 @@ import com.girlify.conversationApp.model.Routes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+const val CATEGORIES_LIST_TEST_TAG = "categories_list_test_tag"
 @Composable
 fun CategoriesScreen(
     navigationController: NavHostController,
@@ -119,6 +121,7 @@ fun CategoriesList(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
+            .testTag(CATEGORIES_LIST_TEST_TAG)
     ) {
         items(categories) { category ->
             ItemCategory(
@@ -148,7 +151,11 @@ fun ItemCategory(
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            GlideImage(model = category.image, contentDescription = "", Modifier.size(64.dp))
+            GlideImage(
+                model = category.image,
+                contentDescription = category.name,
+                Modifier.size(64.dp)
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = category.name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }

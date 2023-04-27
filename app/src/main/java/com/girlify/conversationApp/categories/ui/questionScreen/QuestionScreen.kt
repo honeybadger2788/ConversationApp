@@ -23,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -39,63 +38,60 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
-import com.girlify.conversationApp.categories.ui.questionScreen.model.toggle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+const val QUESTIONS_LIST_TEST_TAG = "questions list test tag"
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
-    categoryId: String,
+    s: String,
     questionViewModel: QuestionViewModel
 ) {
-    val uiState by produceState<QuestionsUiState>(initialValue = QuestionsUiState.Loading) {
-        questionViewModel.uiState.collect { value = it }
-    }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    LaunchedEffect(Unit) {
-        questionViewModel.getQuestions(categoryId)
+    val uiState by produceState<QuestionsUiState>(
+        initialValue = QuestionsUiState.Loading,
+        key1 = lifecycle,
+        key2 = questionViewModel
+    ){
+        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED){
+            questionViewModel.uiState.collect{ value = it }
+        }
     }
 
     when(uiState){
-        is QuestionsUiState.Error ->
-            ErrorQuestions()
-
-        QuestionsUiState.Loading ->
-            LoadingQuestions()
-
+        is QuestionsUiState.Error -> {}
+        QuestionsUiState.Loading -> {
+            Box(Modifier.fillMaxSize()) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
+            }
+        }
         is QuestionsUiState.Success -> {
             Column(Modifier.fillMaxSize()
             ) {
-                TopBar(
-                    (uiState as QuestionsUiState.Success).category.name,
-                    navigationController::popBackStack
-                )
+                TopBar((uiState as QuestionsUiState.Success).category.name){
+                    navigationController.popBackStack()
+                }
                 QuestionsList((uiState as QuestionsUiState.Success).category.questions)
             }
         }
     }
-}
 
-@Composable
-fun LoadingQuestions() {
-    Box(Modifier.fillMaxSize()) {
-        CircularProgressIndicator(Modifier.align(Alignment.Center))
-    }
-}
-
-@Composable
-fun ErrorQuestions() {
-    Box(Modifier.fillMaxSize()) {
-        Text(text = "Error al cargar las preguntas", Modifier.align(Alignment.Center))
+    LaunchedEffect(Unit) {
+        questionViewModel.getQuestions(s)
     }
 }
 
@@ -105,9 +101,16 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
     TopAppBar(
         title = { Text(text =  categoryName)},
         navigationIcon = {
-            IconButton(onClick = goBack) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "back")
-            }
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "back",
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(32.dp)
+                    .clickable {
+                        goBack()
+                    }
+            )
         }, colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
@@ -120,12 +123,12 @@ fun TopBar(categoryName: String, goBack:() -> Unit) {
 fun QuestionsList(questions: List<String>) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-    val halfPastItemThreshold = 500
     LazyRow(
         state = listState,
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .testTag(QUESTIONS_LIST_TEST_TAG),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(questions) { question ->
@@ -135,32 +138,35 @@ fun QuestionsList(questions: List<String>) {
                     .fillParentMaxSize()
             )
             if(!listState.isScrollInProgress){
-                when {
-                    listState.isHalfPastItemLeft(halfPastItemThreshold) ->
-                        coroutineScope.scrollBasic(listState, left = true)
-                    listState.isHalfPastItemRight(halfPastItemThreshold) ->
-                        coroutineScope.scrollBasic(listState)
-                    else -> coroutineScope.scrollBasic(listState, left = true)
-                }
+                if(listState.isHalfPastItemLeft())
+                    coroutineScope.scrollBasic(listState, left = true)
+                else
+                    coroutineScope.scrollBasic(listState)
+
+                if(listState.isHalfPastItemRight())
+                    coroutineScope.scrollBasic(listState)
+                else
+                    coroutineScope.scrollBasic(listState, left = true)
             }
         }
     }
 }
 
-private fun CoroutineScope.scrollBasic(listState: LazyListState, left: Boolean = false) {
+private fun CoroutineScope.scrollBasic(listState: LazyListState, left: Boolean = false){
     launch {
-        val pos: Int =
-            if (left) listState.firstVisibleItemIndex else listState.firstVisibleItemIndex + 1
+        val pos = if(left) listState.firstVisibleItemIndex else listState.firstVisibleItemIndex+1
         listState.animateScrollToItem(pos)
     }
 }
 
-private fun LazyListState.isHalfPastItemRight(threshold: Int): Boolean {
-    return firstVisibleItemScrollOffset > threshold
+@Composable
+private fun LazyListState.isHalfPastItemRight(): Boolean {
+    return firstVisibleItemScrollOffset > 500
 }
 
-private fun LazyListState.isHalfPastItemLeft(threshold: Int): Boolean {
-    return firstVisibleItemScrollOffset <= threshold
+@Composable
+private fun LazyListState.isHalfPastItemLeft(): Boolean {
+    return firstVisibleItemScrollOffset <= 500
 }
 
 @Composable
@@ -169,25 +175,28 @@ fun ItemQuestion(question: String,modifier: Modifier) {
         mutableStateOf(CardFace.Reverse)
     }
 
-    val rotation by animateFloatAsState(
-        targetValue = if (cardFace == CardFace.Reverse) 0f else 180f,
-        animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
+    val rotation = animateFloatAsState(
+        targetValue = cardFace.angle,
+        animationSpec = tween(
+            durationMillis = 400,
+            easing = FastOutSlowInEasing,
+        )
     )
 
     Card(
         modifier = modifier
             .graphicsLayer {
-                rotationX = rotation
+                rotationX = rotation.value
                 cameraDistance = 12f * density
             }
-            .clickable { cardFace = cardFace.toggle() },
+            .clickable { cardFace = cardFace.next },
         border = BorderStroke(8.dp,MaterialTheme.colorScheme.tertiary),
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background)
     ) {
-        if (rotation <= 90f) {
+        if (rotation.value <= 90f) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                ReverseCard()
+                ReverseCard("?")
             }
         } else {
             Box(
@@ -211,13 +220,13 @@ fun FrontCard(question: String) {
         text = question,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
-        fontSize = 38.sp,
-        lineHeight = 44.sp,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
         modifier = Modifier.padding(horizontal = 16.dp)
     )
 }
 
 @Composable
-fun ReverseCard() {
-    Image(painterResource(id = R.drawable.question_mark), contentDescription = "?")
+fun ReverseCard(text: String) {
+    Image(painterResource(id = R.drawable.question_mark), contentDescription = text)
 }
