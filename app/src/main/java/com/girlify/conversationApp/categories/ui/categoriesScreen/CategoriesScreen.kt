@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -85,11 +83,11 @@ fun CategoriesScreen(
                     doubleBackToExitPressedOnce = true
                     scope.launch {
                         Toast.makeText(
-                        context,
-                        "Presiona de nuevo para salir",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                        delay(2000)
+                            context,
+                            "Presiona de nuevo para salir",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        delay(1000)
                         if (doubleBackToExitPressedOnce) {
                             doubleBackToExitPressedOnce = false
                         }
@@ -98,7 +96,6 @@ fun CategoriesScreen(
             }
         }
     }
-
 }
 
 @Composable
