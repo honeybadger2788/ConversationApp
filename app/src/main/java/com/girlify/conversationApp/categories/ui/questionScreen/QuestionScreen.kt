@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -51,6 +50,7 @@ import com.girlify.conversationApp.categories.ui.questionScreen.model.toggle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+const val QUESTIONS_LIST_TEST_TAG = "questions list test tag"
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
@@ -221,3 +221,4 @@ fun FrontCard(question: String) {
 fun ReverseCard() {
     Image(painterResource(id = R.drawable.question_mark), contentDescription = "?")
 }
+
