@@ -13,14 +13,14 @@ class CategoriesService @Inject constructor(
 ) {
     private val categoriesCollectionRef = firebaseClient.db.collection("categories")
 
-    suspend fun getCategories(): Flow<List<CategoryModel>> {
+    suspend fun getCategories(): List<CategoryModel> {
         val categories = mutableListOf<CategoryModel>()
         val querySnapshot = categoriesCollectionRef.get().await()
         for (document in querySnapshot.documents) {
             val category = document.toCategory()
             categories.add(category)
         }
-        return flowOf(categories)
+        return categories
     }
 }
 
