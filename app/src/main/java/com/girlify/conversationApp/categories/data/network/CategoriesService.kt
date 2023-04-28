@@ -1,5 +1,6 @@
 package com.girlify.conversationApp.categories.data.network
 
+import com.girlify.conversationApp.categories.data.network.model.CategoryResponse
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.model.QuestionModel
 import com.google.firebase.firestore.DocumentSnapshot
@@ -13,19 +14,19 @@ class CategoriesService @Inject constructor(
 ) {
     private val categoriesCollectionRef = firebaseClient.db.collection("categories")
 
-    suspend fun getCategories(): Flow<List<CategoryModel>> {
-        val categories = mutableListOf<CategoryModel>()
+    suspend fun getCategories(): List<CategoryResponse> {
+        val categories = mutableListOf<CategoryResponse>()
         val querySnapshot = categoriesCollectionRef.get().await()
         for (document in querySnapshot.documents) {
-            val category = document.toCategory()
+            val category = document.toResponse()
             categories.add(category)
         }
-        return flowOf(categories)
+        return categories
     }
 }
 
-private fun DocumentSnapshot.toCategory(): CategoryModel {
-    return CategoryModel(this.id, this.data?.get("name") as String,
+private fun DocumentSnapshot.toResponse(): CategoryResponse {
+    return CategoryResponse(this.id, this.data?.get("name") as String,
         this.data?.get("image") as String,
         this.data!!["questions"] as List<String>
     )
