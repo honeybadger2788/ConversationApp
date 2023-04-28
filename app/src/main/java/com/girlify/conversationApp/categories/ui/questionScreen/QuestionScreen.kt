@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,19 +44,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.girlify.conversationApp.R
+import com.girlify.conversationApp.categories.ui.UiState
+import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import com.girlify.conversationApp.categories.ui.questionScreen.model.CardFace
 import com.girlify.conversationApp.categories.ui.questionScreen.model.toggle
+import com.girlify.conversationApp.ui.ErrorComponent
+import com.girlify.conversationApp.ui.LoadingComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-const val QUESTIONS_LIST_TEST_TAG = "questions list test tag"
 @Composable
 fun QuestionScreen(
     navigationController: NavHostController,
     categoryId: String,
     questionViewModel: QuestionViewModel
 ) {
-    val uiState by produceState<QuestionsUiState>(initialValue = QuestionsUiState.Loading) {
+    val uiState by produceState<UiState<*>>(initialValue = UiState.Loading) {
         questionViewModel.uiState.collect { value = it }
     }
 
@@ -66,38 +68,25 @@ fun QuestionScreen(
     }
 
     when(uiState){
-        is QuestionsUiState.Error ->
-            ErrorQuestions()
+        is UiState.Error ->
+            ErrorComponent("Error al cargar las preguntas")
 
-        QuestionsUiState.Loading ->
-            LoadingQuestions()
+        UiState.Loading ->
+            LoadingComponent()
 
-        is QuestionsUiState.Success -> {
+        is UiState.Success -> {
             Column(Modifier.fillMaxSize()
             ) {
                 TopBar(
-                    (uiState as QuestionsUiState.Success).category.name,
+                    (uiState as UiState.Success<CategoryModel>).data.name,
                     navigationController::popBackStack
                 )
-                QuestionsList((uiState as QuestionsUiState.Success).category.questions)
+                QuestionsList((uiState as UiState.Success<CategoryModel>).data.questions)
             }
         }
     }
 }
 
-@Composable
-fun LoadingQuestions() {
-    Box(Modifier.fillMaxSize()) {
-        CircularProgressIndicator(Modifier.align(Alignment.Center))
-    }
-}
-
-@Composable
-fun ErrorQuestions() {
-    Box(Modifier.fillMaxSize()) {
-        Text(text = "Error al cargar las preguntas", Modifier.align(Alignment.Center))
-    }
-}
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
