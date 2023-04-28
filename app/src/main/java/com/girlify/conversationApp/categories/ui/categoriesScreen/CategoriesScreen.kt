@@ -27,7 +27,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +40,6 @@ import com.girlify.conversationApp.model.Routes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-const val CATEGORIES_LIST_TEST_TAG = "categories list test tag"
 @Composable
 fun CategoriesScreen(
     navigationController: NavHostController,
@@ -89,7 +87,7 @@ fun CategoriesScreen(
                             "Presiona de nuevo para salir",
                             Toast.LENGTH_SHORT
                         ).show()
-                        delay(2000)
+                        delay(1000)
                         if (doubleBackToExitPressedOnce) {
                             doubleBackToExitPressedOnce = false
                         }
@@ -98,7 +96,6 @@ fun CategoriesScreen(
             }
         }
     }
-
 }
 
 @Composable
@@ -111,7 +108,6 @@ fun CategoriesList(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
-            .testTag(CATEGORIES_LIST_TEST_TAG)
     ) {
         items(categories) { category ->
             ItemCategory(
