@@ -37,7 +37,12 @@ fun SplashScreen(navController: NavController) {
                 })
         )
         delay(1000L)
-        navController.navigate(Routes.Categories.route)
+        navController.navigate(Routes.Categories.route){
+            // remueve al splash screen de la lista de rutas visitadas
+            popUpTo(Routes.SplashScreen.route) {
+                inclusive = true
+            }
+        }
     }
 
     Box(
