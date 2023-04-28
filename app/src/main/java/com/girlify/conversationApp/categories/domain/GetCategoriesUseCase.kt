@@ -13,7 +13,7 @@ class GetCategoriesUseCase @Inject constructor(
         val categories = categoryRepository.getAllCategoriesFromDatabase()
         return if (categories.isEmpty()) {
             val response = categoryRepository.getAllCategoriesFromFirebase()
-            categoryRepository.insertCategories(response.map { categoryModel -> categoryModel.toDatabase() })
+            categoryRepository.insertCategories(response.map { category -> category.toDatabase() })
             flowOf(response)
         } else {
             flowOf(categories)

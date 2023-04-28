@@ -10,10 +10,10 @@ class GetQuestionsUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository
 ){
     suspend operator fun invoke(categoryId: String): Flow<CategoryModel?> {
-        val response = categoryRepository.getQuestionsFromDatabase(categoryId)
-        return if (response?.questions.isNullOrEmpty())
+        val category = categoryRepository.getQuestionsFromDatabase(categoryId)
+        return if (category == null)
             flowOf(null)
         else
-            flowOf(response)
+            flowOf(category)
     }
 }
