@@ -27,9 +27,7 @@ internal class GetQuestionsUseCaseTest {
 
         val response = getQuestionsUseCase("")
 
-        response.collect { values ->
-            assert(values == null)
-        }
+        assert(response == null)
     }
 
     @Test
@@ -40,9 +38,7 @@ internal class GetQuestionsUseCaseTest {
 
         val response = getQuestionsUseCase(category.id)
 
-        response.collect { values ->
-            assert(values == category)
-        }
+        assert(response == category)
     }
 
     @Test
@@ -53,8 +49,6 @@ internal class GetQuestionsUseCaseTest {
 
         val response = getQuestionsUseCase(category.id)
 
-        response.collect { values ->
-            assert(values == null)
-        }
+        assert(response == null)
     }
 }

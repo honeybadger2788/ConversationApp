@@ -48,9 +48,7 @@ internal class GetCategoriesUseCaseTest{
             repository.getAllCategoriesFromFirebase()
         }
 
-        response.collect {
-            assert(getCategoriesList() == it)
-        }
+        assert(getCategoriesList() == response)
     }
 
     private fun getCategoriesList(): List<CategoryModel> = listOf(
