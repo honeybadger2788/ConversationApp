@@ -9,11 +9,6 @@ import javax.inject.Inject
 class GetQuestionsUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository
 ){
-    suspend operator fun invoke(categoryId: String): Flow<CategoryModel?> {
-        val category = categoryRepository.getQuestionsFromDatabase(categoryId)
-        return if (category == null)
-            flowOf(null)
-        else
-            flowOf(category)
-    }
+    suspend operator fun invoke(categoryId: String): CategoryModel? =
+        categoryRepository.getQuestionsFromDatabase(categoryId)
 }
