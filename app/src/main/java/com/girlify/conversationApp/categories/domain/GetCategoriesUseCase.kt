@@ -9,14 +9,12 @@ import javax.inject.Inject
 class GetCategoriesUseCase @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) {
-    suspend operator fun invoke(): Flow<List<CategoryModel>> {
+    suspend operator fun invoke(): List<CategoryModel> {
         val categories = categoryRepository.getAllCategoriesFromDatabase()
-        return if (categories.isEmpty()) {
+        return categories.ifEmpty {
             val response = categoryRepository.getAllCategoriesFromFirebase()
             categoryRepository.insertCategories(response.map { category -> category.toDatabase() })
-            flowOf(response)
-        } else {
-            flowOf(categories)
+            response
         }
     }
 }

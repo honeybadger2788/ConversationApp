@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.girlify.conversationApp.categories.domain.GetCategoriesUseCase
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +19,8 @@ class CategoriesViewModel @Inject constructor(
     val uiState: StateFlow<CategoriesUiState> = _uiState
 
     fun getCategories(){
-        viewModelScope.launch {
-            getCategoriesUseCase().collect {
+        viewModelScope.launch(Dispatchers.IO) {
+            getCategoriesUseCase().let {
                 _uiState.value = CategoriesUiState.Success(it)
             }
         }
