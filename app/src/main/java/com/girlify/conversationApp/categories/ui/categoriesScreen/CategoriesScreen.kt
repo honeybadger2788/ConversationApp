@@ -27,25 +27,28 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.girlify.conversationApp.categories.ui.UiState
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
-import com.girlify.conversationApp.categories.ui.questionScreen.ErrorQuestions
-import com.girlify.conversationApp.categories.ui.questionScreen.LoadingQuestions
 import com.girlify.conversationApp.model.Routes
+import com.girlify.conversationApp.ui.ErrorComponent
+import com.girlify.conversationApp.ui.LoadingComponent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+const val CATEGORIES_LIST_TEST_TAG = "categories list test tag"
 @Composable
 fun CategoriesScreen(
     navigationController: NavHostController,
     categoriesViewModel: CategoriesViewModel
 ) {
-    val uiState by produceState<CategoriesUiState>(initialValue = CategoriesUiState.Loading) {
+    val uiState by produceState<UiState<*>>(initialValue = UiState.Loading) {
         categoriesViewModel.uiState.collect { value = it }
     }
 
@@ -54,15 +57,15 @@ fun CategoriesScreen(
     }
 
     when(uiState){
-        is CategoriesUiState.Error ->
-            ErrorQuestions()
+        is UiState.Error ->
+            ErrorComponent("Error al cargar las categorias")
 
-        CategoriesUiState.Loading ->
-            LoadingQuestions()
+        UiState.Loading ->
+            LoadingComponent()
 
-        is CategoriesUiState.Success -> {
+        is UiState.Success -> {
             CategoriesList(
-                (uiState as CategoriesUiState.Success).categories){
+                (uiState as UiState.Success<List<CategoryModel>>).data){
                 navigationController.navigate(
                     Routes.Questions.createRoute(
                         categoryId = it.id
@@ -108,6 +111,7 @@ fun CategoriesList(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxSize()
+            .testTag(CATEGORIES_LIST_TEST_TAG)
     ) {
         items(categories) { category ->
             ItemCategory(
