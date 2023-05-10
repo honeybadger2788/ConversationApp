@@ -38,7 +38,7 @@ internal class CategoriesListTest {
             .assertCountEquals(getCategoriesList().size)
     }
     @Test
-    fun whenComponentStart_thenVerifyFirstAndLastCategoriesName(){
+    fun whenComponentStart_thenVerifyCategoriesNameAreDisplayed(){
         composeTestRule.setContent {
             CategoriesList(categories = getCategoriesList(), goToQuestions = {})
         }
