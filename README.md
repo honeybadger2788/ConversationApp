@@ -6,7 +6,7 @@ Genera conversaciones interesantes con esta aplicación de preguntas disparadora
 
 ## Descripción
 
-La aplicación que hemos desarrollado tiene como finalidad actuar como un generador de diálogos y se
+La aplicación que he desarrollado tiene como finalidad actuar como un generador de diálogos y se
 apoya en tecnologías avanzadas para lograrlo. Utiliza Firebase para el almacenamiento en la nube y
 Room para el almacenamiento local. Para ofrecer una experiencia interactiva al usuario, se han
 integrado animaciones a la dinámica del juego. Las preguntas generadoras de diálogo están
