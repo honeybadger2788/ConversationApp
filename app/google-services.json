@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "78800850741",
+    "firebase_url": "https://conversationapp-21515-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "conversationapp-21515",
+    "storage_bucket": "conversationapp-21515.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78800850741:android:92530b4bdd070bccd1067c",
+        "android_client_info": {
+          "package_name": "com.girlify.conversationApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78800850741-p58f3uct0uoatj1inhulggcofhtt69ji.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYqxhIbhrsMSYEEp_jrUETTiG5E-dskGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78800850741-p58f3uct0uoatj1inhulggcofhtt69ji.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
