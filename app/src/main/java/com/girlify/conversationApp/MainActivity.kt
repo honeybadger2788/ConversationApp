@@ -19,7 +19,7 @@ import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScre
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesViewModel
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
-import com.girlify.conversationApp.categories.ui.splash.SplashViewModel
+import com.girlify.conversationApp.categories.ui.splashScreen.SplashViewModel
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,7 +59,14 @@ private fun MyNavigation(
         startDestination = Routes.Categories.route
     ) {
         composable(Routes.Categories.route) {
-            CategoriesScreen(navigationController, categoriesViewModel)
+            CategoriesScreen({
+                navigationController.navigate(
+                    Routes.Questions.createRoute(
+                        categoryId = it
+                    )
+                )
+            }, categoriesViewModel)
+
         }
         composable(
             Routes.Questions.route,
@@ -68,7 +75,7 @@ private fun MyNavigation(
             })
         ) { backStackEntry ->
             QuestionScreen(
-                navigationController,
+                navigationController::popBackStack,
                 backStackEntry.arguments?.getString("categoryId")?:"",
                 questionViewModel
             )
