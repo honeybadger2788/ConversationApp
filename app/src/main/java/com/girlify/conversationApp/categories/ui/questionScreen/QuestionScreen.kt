@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun QuestionScreen(
-    navigationController: NavHostController,
+    goBack: () -> Unit,
     categoryId: String,
     questionViewModel: QuestionViewModel
 ) {
@@ -79,7 +79,7 @@ fun QuestionScreen(
             ) {
                 TopBar(
                     (uiState as UiState.Success<CategoryModel>).data.name,
-                    navigationController::popBackStack
+                    goBack
                 )
                 QuestionsList((uiState as UiState.Success<CategoryModel>).data.questions)
             }

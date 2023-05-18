@@ -1,4 +1,4 @@
-package com.girlify.conversationApp.categories.ui.splash
+package com.girlify.conversationApp.categories.ui.splashScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
