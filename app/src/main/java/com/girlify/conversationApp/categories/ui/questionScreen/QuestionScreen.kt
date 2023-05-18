@@ -42,7 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.UiState
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel

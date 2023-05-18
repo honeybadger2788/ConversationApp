@@ -35,7 +35,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.girlify.conversationApp.categories.ui.UiState
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
-import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.ErrorComponent
 import com.girlify.conversationApp.ui.LoadingComponent
 import kotlinx.coroutines.delay
