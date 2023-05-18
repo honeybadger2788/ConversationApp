@@ -9,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,8 +19,8 @@ import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScre
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesViewModel
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
+import com.girlify.conversationApp.categories.ui.splash.SplashViewModel
 import com.girlify.conversationApp.model.Routes
-import com.girlify.conversationApp.ui.SplashScreen
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,8 +28,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val categoriesViewModel: CategoriesViewModel by viewModels()
     private val questionViewModel: QuestionViewModel by viewModels()
+    private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        splashScreen.setKeepOnScreenCondition{splashViewModel.isLoading.value}
         setContent {
             ConversationAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -51,11 +56,8 @@ private fun MyNavigation(
     val navigationController = rememberNavController()
     NavHost(
         navController = navigationController,
-        startDestination = Routes.SplashScreen.route
+        startDestination = Routes.Categories.route
     ) {
-        composable(Routes.SplashScreen.route) {
-            SplashScreen(navigationController)
-        }
         composable(Routes.Categories.route) {
             CategoriesScreen(navigationController, categoriesViewModel)
         }
