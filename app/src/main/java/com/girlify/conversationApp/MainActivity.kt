@@ -16,9 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesScreen
-import com.girlify.conversationApp.categories.ui.categoriesScreen.CategoriesViewModel
 import com.girlify.conversationApp.categories.ui.questionScreen.QuestionScreen
-import com.girlify.conversationApp.categories.ui.questionScreen.QuestionViewModel
 import com.girlify.conversationApp.categories.ui.splashScreen.SplashViewModel
 import com.girlify.conversationApp.model.Routes
 import com.girlify.conversationApp.ui.theme.ConversationAppTheme
@@ -26,8 +24,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val categoriesViewModel: CategoriesViewModel by viewModels()
-    private val questionViewModel: QuestionViewModel by viewModels()
     private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -41,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.surface
                 ) {
-                    MyNavigation(categoriesViewModel, questionViewModel)
+                    MyNavigation()
                 }
             }
         }
@@ -49,10 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MyNavigation(
-    categoriesViewModel: CategoriesViewModel,
-    questionViewModel: QuestionViewModel
-) {
+private fun MyNavigation() {
     val navigationController = rememberNavController()
     NavHost(
         navController = navigationController,
@@ -65,7 +58,7 @@ private fun MyNavigation(
                         categoryId = it
                     )
                 )
-            }, categoriesViewModel)
+            })
 
         }
         composable(
@@ -76,8 +69,7 @@ private fun MyNavigation(
         ) { backStackEntry ->
             QuestionScreen(
                 navigationController::popBackStack,
-                backStackEntry.arguments?.getString("categoryId")?:"",
-                questionViewModel
+                backStackEntry.arguments?.getString("categoryId")?:""
             )
         }
     }
