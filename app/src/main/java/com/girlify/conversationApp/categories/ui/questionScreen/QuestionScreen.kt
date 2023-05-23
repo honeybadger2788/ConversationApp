@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.girlify.conversationApp.R
 import com.girlify.conversationApp.categories.ui.UiState
 import com.girlify.conversationApp.categories.ui.categoriesScreen.model.CategoryModel
@@ -56,7 +57,7 @@ import kotlinx.coroutines.launch
 fun QuestionScreen(
     goBack: () -> Unit,
     categoryId: String,
-    questionViewModel: QuestionViewModel
+    questionViewModel: QuestionViewModel = hiltViewModel()
 ) {
     val uiState by produceState<UiState<*>>(initialValue = UiState.Loading) {
         questionViewModel.uiState.collect { value = it }
